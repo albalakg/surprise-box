@@ -1,0 +1,195 @@
+:root {
+    /* Scene */
+    --sceneTime: 10s;
+    --fontFamily: sans;
+
+    /* Box */
+    --boxSize: 2em;
+    --halfBoxSize: calc(var(--boxSize) / 2);
+    --boxImage: #dab18f;
+    --boxImageClear: #dab18fcc;
+    --boxTextColor: #d6211c;
+    --boxAnimationLength: .5s;
+
+    /* Ball */
+    --ballSize: 1em;
+
+    /* Floor */
+    --floorSize: 15em;
+    --floorImage: radial-gradient(#0000, #000 70%), radial-gradient(circle at center center, rgba(33,33,33,0),rgb(33,33,33)),repeating-linear-gradient(135deg, rgb(33,33,33) 0px, rgb(33,33,33) 1px,transparent 1px, transparent 4px),repeating-linear-gradient(45deg, rgb(56,56,56) 0px, rgb(56,56,56) 5px,transparent 5px, transparent 6px),linear-gradient(90deg, rgb(33,33,33),rgb(33,33,33));;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    font-family: var(--fontFamily);
+}
+
+body {
+    height: 100vh;
+    background-color: #000;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 100px;
+    perspective: 20em;
+    perspective-origin: 50% 0%;
+}
+
+.scene {
+    position: relative;
+    transform-style: preserve-3d;
+    animation: rotate var(--sceneTime) infinite linear;
+}
+
+.floor {
+    height: var(--floorSize);
+    width: var(--floorSize);
+    background-image: var(--floorImage);
+    position: absolute;
+    position: absolute;
+    left: calc(var(--floorSize) * -.5);
+    top: calc(var(--boxSize) * -3);
+    transform: rotateX(90deg);
+}
+
+.box {
+    height: var(--boxSize);
+    width: var(--boxSize);
+    position: absolute;
+    left: calc(var(--boxSize) * -.5);
+    bottom: calc(var(--boxSize) * -.5);
+    transform-style: preserve-3d;
+}
+
+.box > div {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.box span {
+    color: var(--boxTextColor);
+    font-weight: bold;
+    -webkit-text-stroke-color: #000;
+    -webkit-text-stroke-width: 1px;
+}
+
+.front, .back, .left, .right, .bottom {
+    height: 100%;
+    width: 100%;
+    background-color: var(--boxImage);
+}
+
+.front, .back, .left, .right {
+    box-shadow: 0 0 calc(var(--boxSize) /5) #0008 inset;
+}
+
+.top__left, .top__right {
+    background-color: var(--boxImage);
+    box-shadow: 0 0 calc(var(--boxSize) /5) #0005, 0 0 calc(var(--boxSize) /5) #0005 inset;
+}
+
+.top__left {
+    transform-style: preserve-3d;
+    height: var(--halfBoxSize);
+    width: var(--boxSize);
+    right: calc(var(--halfBoxSize) / -2);
+    transform: rotateX(90deg) rotateY(0deg) rotateZ(90deg) translateZ(calc(var(--halfBoxSize) * .5)) translateY(0);
+    animation: topLeftOpening var(--boxAnimationLength) forwards ease-out;
+}
+
+.top__right {
+    height: var(--halfBoxSize);
+    width: var(--boxSize);
+    left: calc(var(--halfBoxSize) / -2);
+    transform: rotateX(90deg) rotateY(0deg) rotateZ(270deg) translateZ(calc(var(--halfBoxSize) * .5)) translateY(0);
+    animation: topRightOpening var(--boxAnimationLength) forwards ease-out;
+    animation-delay: .1s;
+}
+
+.front {
+    transform: translateZ(var(--halfBoxSize));
+}
+
+.right {
+    transform: rotateY(90deg) translateZ(var(--halfBoxSize));
+}
+
+.back {
+    transform: rotateY(180deg) translateZ(var(--halfBoxSize));
+}
+
+.left {
+    transform: rotateY(270deg) translateZ(var(--halfBoxSize));
+}
+
+.bottom {
+    transform: rotateX(90deg) translateZ(calc(var(--halfBoxSize) * -1));
+    box-shadow: 0 0 calc(var(--halfBoxSize)) #000c;
+}
+
+.ball__wrapper {
+    position: absolute;
+    height: var(--ballSize);
+    width: var(--ballSize);
+    border-radius: 50%;
+    animation: rotate var(--sceneTime) infinite linear reverse;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
+
+.ball {
+    background: radial-gradient(circle at top, #fff, #f00, #000 90%);
+    height: 100%;
+    width: 100%;
+    border-radius: 50%;
+    animation: ballJumping calc(var(--sceneTime) / 3) ease-out forwards;
+}
+
+@keyframes rotate {
+    to {
+        transform: rotateY(360deg);
+    }
+}
+
+@keyframes topLeftOpening {
+    to {
+        z-index: 10;
+        transform: rotateX(90deg) rotateY(90deg) rotateZ(90deg) translateZ(calc(var(--halfBoxSize) * .5)) translateY(calc(var(--halfBoxSize)));
+        background-color: var(--boxImage);
+    }
+}
+
+@keyframes topRightOpening {
+    to {
+        z-index: 10;
+        transform: rotateX(90deg) rotateY(-90deg) rotateZ(270deg) translateZ(calc(var(--halfBoxSize) * .5)) translateY(calc(var(--halfBoxSize)));
+        background-color: var(--boxImage);
+    }
+}
+
+@keyframes ballJumping {
+    0%, 30%, 60%, 100% {
+        transform: translateY(0);
+    }
+    
+    15% {
+        transform: translateY(calc(var(--ballSize) * -6));
+        animation-timing-function: ease-in;
+    }
+    
+    45% {
+        transform: translateY(calc(var(--ballSize) * -4));
+        animation-timing-function: ease-in;
+    }
+    
+    75% {
+        transform: translateY(calc(var(--ballSize) * -2));
+        animation-timing-function: ease-in;
+    }
+}
